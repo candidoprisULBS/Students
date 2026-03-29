@@ -1,24 +1,33 @@
 package ro.ulbs.proiectaresoftware.students;
 
-public class Student {
-    int numarMatricol;
+import java.util.Objects;public class Student {
+    String numarMatricol;
     String prenume;
     String nume;
-    String formațieDeStudiu;
+    String formatieDeStudiu;
+    Integer nota;
 
-    public Student(int numarMatricol, String prenume, String nume, String formațieDeStudiu) {
+    public Student(String numarMatricol, String prenume, String nume, String formatieDeStudiu) {
         this.numarMatricol = numarMatricol;
         this.prenume = prenume;
         this.nume = nume;
-        this.formațieDeStudiu = formațieDeStudiu;
+        this.formatieDeStudiu = formatieDeStudiu;
     }
 
-    public int getNumarMatricol() {
+    public Student(String numarMatricol, String prenume, String nume, String formatieDeStudiu, Integer nota) {
+        this.numarMatricol = numarMatricol;
+        this.prenume = prenume;
+        this.nume = nume;
+        this.formatieDeStudiu = formatieDeStudiu;
+        this.nota = nota;
+    }
+
+    public String getNumarMatricol() {
         return numarMatricol;
     }
 
-    public String getFormațieDeStudiu() {
-        return formațieDeStudiu;
+    public String getFormatieDeStudiu() {
+        return formatieDeStudiu;
     }
 
     public String getNume() {
@@ -29,8 +38,22 @@ public class Student {
         return prenume;
     }
 
+    public Integer getNota() {return nota;}
+
     @Override
     public String toString() {
-        return String.format("%d %10s %10s %10s",numarMatricol,prenume,nume,formațieDeStudiu);
+        return String.format("%s %10s %10s %10s", numarMatricol, prenume, nume, formatieDeStudiu);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Student student = (Student) o;
+        return Objects.equals(prenume, student.prenume) && Objects.equals(nume, student.nume) && Objects.equals(formatieDeStudiu, student.formatieDeStudiu);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(prenume, nume, formatieDeStudiu);
     }
 }

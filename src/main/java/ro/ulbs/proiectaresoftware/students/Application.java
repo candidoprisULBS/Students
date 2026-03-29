@@ -1,33 +1,164 @@
 package ro.ulbs.proiectaresoftware.students;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 public class Application {
     static void main() {
-        Student s1 = new Student(112, "Ioan","Popa","TI21/1");
-        Student s2 = new Student(112, "Maria","Oprea","TI21/1");
-        Student s3 = new Student(120, "Alis","Popa","TI21/2");
-        Student s4 = new Student(122, "Mihai","Vecerdea","TI22/1");
-        Student s5 = new Student(122, "Eugen","Uritescu","TI22/2");
+        Student s1 = new Student("112", "Ioan", "Popa", "TI21/1");
+        Student s2 = new Student("112", "Maria", "Oprea", "TI21/1");
+        Student s3 = new Student("120", "Alis", "Popa", "TI21/2");
+        Student s4 = new Student("122", "Mihai", "Vecerdea", "TI22/1");
+        Student s5 = new Student("122", "Eugen", "Uritescu", "TI22/2");
+//
+//        System.out.println(s1);
+//        System.out.println(s2);
+//        System.out.println(s3);
+//        System.out.println(s4);
+//        System.out.println(s5);
+//
+        List<Student> listaStudenti = new ArrayList();
+//        System.out.println("Nr. listaStudenti este " + listaStudenti.size());
+        listaStudenti.add(s1);
+        listaStudenti.add(s2);
+        listaStudenti.add(s3);
+        listaStudenti.add(s4);
+        listaStudenti.add(s5);
+//        System.out.println("Nr. listaStudenti este " + listaStudenti.size());
 
-        System.out.println(s1);
-        System.out.println(s2);
-        System.out.println(s3);
-        System.out.println(s4);
-        System.out.println(s5);
+//        for (Student s : listaStudenti){
+//            System.out.println(s);
+//        }
 
-        List<Student> studenti = new ArrayList();
-        System.out.println("Nr. studenti este " + studenti.size());
-        studenti.add(s1);
-        studenti.add(s2);
-        studenti.add(s3);
-        studenti.add(s4);
-        studenti.add(s5);
-        System.out.println("Nr. studenti este " + studenti.size());
+        List<Student> studentiFisier = citireFisier("studenti.csv");
 
-        for (Student s : studenti){
-            System.out.println(s);
+        afisareListaNesortata(studentiFisier);
+        sortareDupaNumeSiFormatiune(studentiFisier);
+        afisareListaSortata(studentiFisier);
+
+        Map<String, Integer> citireNote = citireNote("noteStudenti.csv");
+
+        System.out.println();
+        for (Map.Entry<String, Integer> intrare : citireNote.entrySet()) {
+            System.out.println("Student: " + intrare.getKey() + " Nota:  " + intrare.getValue());
         }
+
+        Set<Student> setStudenti = new HashSet<>(listaStudenti);
+        Student studentCautat = new Student("182", "Ioan", "Popa", "TI21/1");
+
+        System.out.println();
+        if (prezenta(setStudenti, studentCautat)) {
+            System.out.println("Studentul este prezent!");
+        } else {
+            System.out.println("Studentul ne este prezent!");
+        }
+
+        Integer notaStudent = nota(citireNote, studentCautat);
+        if (notaStudent != null) {
+            System.out.println("Nota studentului " + studentCautat.getNume() + " este " + studentCautat.getNota());
+        } else {
+            System.out.println("Nu exista nota pentru acest student! " + studentCautat.getNume() + " este " + studentCautat.getNumarMatricol());
+        }
+
+    }
+
+    public static Integer nota(Map<String, Integer> note, Student student) {
+        return note.get(student.getNumarMatricol());
+    }
+
+    private static void afisareListaSortata(List<Student> list) {
+        System.out.println();
+        System.out.println("Studentii sortati alfabetic: ");
+        for (Student student : list) {
+            System.out.println(student.getNume() + " " + student.getPrenume() + " " + student.getNumarMatricol() + " " + student.getFormatieDeStudiu());
+        }
+    }
+
+    private static void afisareListaNesortata(List<Student> list) {
+        System.out.println("Studentii cititi din fisier: ");
+        if (list.isEmpty()) {
+            System.out.println("Nu sunt studenti in lista!");
+        } else {
+            for (Student student : list) {
+                System.out.println(student);
+            }
+        }
+    }
+
+    private static void sortareDupaNumeSiFormatiune(List<Student> list) {
+        Collections.sort(list, new Comparator<Student>() {
+            @Override
+            public int compare(Student o1, Student o2) {
+                if (o1.formatieDeStudiu.equals(o2.formatieDeStudiu)) {
+                    return o1.nume.compareTo(o2.nume);
+                }
+                return o1.formatieDeStudiu.compareTo(o2.formatieDeStudiu);
+            }
+
+            @Override
+            public boolean equals(Object obj) {
+                return false;
+            }
+        });
+    }
+
+//    public static boolean prezenta(List<Student> lista, Student student) {
+//        for (Student stud : lista) {
+//            if(stud.equals(student)){
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
+
+    public static boolean prezenta(Collection<Student> c, Student s) {
+        return c.contains(s);
+    }
+
+    public static List<Student> citireFisier(String csv) {
+        List<Student> stud = new ArrayList<>();
+        try {
+            File file = new File(csv);
+            Scanner scn = new Scanner(file);
+            while (scn.hasNextLine()) {
+                String line = scn.nextLine();
+                String[] date = line.split(",");
+                if (date.length == 4) {
+                    String nrMatricol = date[0].trim();
+                    String prenume = date[1].trim();
+                    String nume = date[2].trim();
+                    String formatie = date[3].trim();
+                    Student student1 = new Student(nrMatricol, prenume, nume, formatie);
+                    stud.add(student1);
+                }
+            }
+            scn.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Nu s-a gasit fisierul!");
+            e.printStackTrace();
+        }
+        return stud;
+    }
+
+    public static Map<String, Integer> citireNote(String csv) {
+        Map<String, Integer> mapCreat = new HashMap<>();
+        try {
+            File file = new File(csv);
+            Scanner scn = new Scanner(file);
+            while (scn.hasNextLine()) {
+                String line = scn.nextLine();
+                String[] date = line.split(",");
+                if (date.length == 2) {
+                    String nume = date[0].trim();
+                    Integer valoare = Integer.parseInt(date[1].trim());
+                    mapCreat.put(nume, valoare);
+                }
+            }
+            scn.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Nu s-a gasit fisierul!");
+            e.printStackTrace();
+        }
+        return mapCreat;
     }
 }
