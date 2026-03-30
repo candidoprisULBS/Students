@@ -36,7 +36,7 @@ public class Application {
         sortareDupaNumeSiFormatiune(studentiFisier);
         afisareListaSortata(studentiFisier);
 
-        Map<String, Integer> citireNote = citireNote("noteStudenti.csv");
+        Map<String, Integer> citireNote = citireNote("notestudenti.csv");
 
         System.out.println();
         for (Map.Entry<String, Integer> intrare : citireNote.entrySet()) {
@@ -59,6 +59,12 @@ public class Application {
         } else {
             System.out.println("Nu exista nota pentru acest student! " + studentCautat.getNume() + " este " + studentCautat.getNumarMatricol());
         }
+
+        Map<Student,Integer> mapNoteStudenti = noteStudentiFaraMatricol(listaStudenti, citireNote);
+        Student s = new Student(null,"Alex","Doro","C22/2");
+        listaStudenti.add(s);
+
+        printNota(mapNoteStudenti, s);
 
     }
 
@@ -160,5 +166,24 @@ public class Application {
             e.printStackTrace();
         }
         return mapCreat;
+    }
+
+    public static Map<Student, Integer> noteStudentiFaraMatricol(List<Student> list,Map<String,Integer> n){
+        Map<Student,Integer> notaFinal = new HashMap<>();
+        for(Student s:list){
+            Integer nota = n.get(s.getNumarMatricol());
+            if (nota != null){
+                notaFinal.put(s,nota);
+            }
+        }
+        return notaFinal;
+    }
+
+    private static void printNota(Map<Student, Integer> afisareNotaStudentiFaraMatricol,Student studentFaraMatricol) {
+        if(afisareNotaStudentiFaraMatricol.containsKey(studentFaraMatricol)){
+            System.out.println("Nota lui "+ studentFaraMatricol.getNume() + " este "+ afisareNotaStudentiFaraMatricol.get(studentFaraMatricol));
+        }else{
+            System.out.println("Studentul nu exista!");
+        }
     }
 }
