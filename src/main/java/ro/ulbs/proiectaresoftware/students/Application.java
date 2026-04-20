@@ -55,7 +55,7 @@ public class Application {
 
         Integer notaStudent = nota(citireNote, studentCautat);
         if (notaStudent != null) {
-            System.out.println("Nota studentului " + studentCautat.getNume() + " este " + studentCautat.getNota());
+            System.out.println("Nota studentului " + studentCautat.getNume() + " este " + notaStudent);
         } else {
             System.out.println("Nu exista nota pentru acest student! " + studentCautat.getNume() + " este " + studentCautat.getNumarMatricol());
         }
@@ -91,7 +91,7 @@ public class Application {
         }
     }
 
-    private static void sortareDupaNumeSiFormatiune(List<Student> list) {
+    public static void sortareDupaNumeSiFormatiune(List<Student> list) {
         Collections.sort(list, new Comparator<Student>() {
             @Override
             public int compare(Student o1, Student o2) {

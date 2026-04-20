@@ -1,11 +1,11 @@
 package ro.ulbs.proiectaresoftware.students;
 
-import java.util.Objects;public class Student {
-    String numarMatricol;
-    String prenume;
-    String nume;
-    String formatieDeStudiu;
-    Integer nota;
+import java.util.Objects;
+public class Student implements Comparable<Student>{
+    final String numarMatricol;
+    final String prenume;
+    final String nume;
+    final String formatieDeStudiu;
 
     public Student(String numarMatricol, String prenume, String nume, String formatieDeStudiu) {
         this.numarMatricol = numarMatricol;
@@ -14,13 +14,6 @@ import java.util.Objects;public class Student {
         this.formatieDeStudiu = formatieDeStudiu;
     }
 
-    public Student(String numarMatricol, String prenume, String nume, String formatieDeStudiu, Integer nota) {
-        this.numarMatricol = numarMatricol;
-        this.prenume = prenume;
-        this.nume = nume;
-        this.formatieDeStudiu = formatieDeStudiu;
-        this.nota = nota;
-    }
 
     public String getNumarMatricol() {
         return numarMatricol;
@@ -38,7 +31,8 @@ import java.util.Objects;public class Student {
         return prenume;
     }
 
-    public Integer getNota() {return nota;}
+
+
 
     @Override
     public String toString() {
@@ -56,4 +50,15 @@ import java.util.Objects;public class Student {
     public int hashCode() {
         return Objects.hash(prenume, nume, formatieDeStudiu);
     }
-}
+
+    @Override
+    public int compareTo(Student s) {
+        if(this.formatieDeStudiu.equals(s.formatieDeStudiu)){
+            if(this.nume.equals(s.nume)) {
+                return this.prenume.compareTo(s.prenume);
+            }
+            return this.nume.compareTo(s.nume);
+        }
+        return this.formatieDeStudiu.compareTo(s.formatieDeStudiu);
+    }
+;}
