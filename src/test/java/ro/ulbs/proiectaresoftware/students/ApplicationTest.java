@@ -45,11 +45,11 @@ class ApplicationTest {
         //Act
         Integer notaCorecta = Application.nota(noteMap,s1);
         Integer notaGresita = Application.nota(noteMap,s3);
-        Integer notaInexsistenta = Application.nota(noteMap,s3);
+        Integer notaInexsistenta = Application.nota(noteMap,s2);
         //Assert
         assertEquals(10,notaCorecta);
         assertNotEquals(8,notaGresita);
-        assertEquals(null,notaGresita);
+        assertEquals(null,notaInexsistenta);
     }
 
     @Test
@@ -76,9 +76,9 @@ class ApplicationTest {
 
             assertEquals(rezultatComparare <=0,"Ordine gresita");
         }
-        //Act - formatiuni unice
+        //Act - formatiuni diferite
         Application.sortareDupaNumeSiFormatiune(listaStudenti2);
-        //Assert - formatiuni unice
+        //Assert - formatiuni diferite
         for(int i = 0; i < listaStudenti2.size() - 1; i++) {
             Student curent = listaStudenti2.get(i);
             Student urmator =  listaStudenti2.get(i+1);
