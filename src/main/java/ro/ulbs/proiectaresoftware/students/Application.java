@@ -1,5 +1,10 @@
 package ro.ulbs.proiectaresoftware.students;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import java.io.*;
 import java.util.*;
 
@@ -65,6 +70,9 @@ public class Application {
         listaStudenti.add(s);
 
         printNota(mapNoteStudenti, s);
+
+        //printareEXCEL(listaStudenti,"Printare EXCEL");
+        
 
     }
 
@@ -184,6 +192,44 @@ public class Application {
             System.out.println("Nota lui "+ studentFaraMatricol.getNume() + " este "+ afisareNotaStudentiFaraMatricol.get(studentFaraMatricol));
         }else{
             System.out.println("Studentul nu exista!");
+        }
+    }
+
+    public static void printareEXCEL(List<Student> listaStudenti,String numeEXCEL){
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("Studenti");
+        Map<String, Object[]> data = new TreeMap<>();
+        data.put("1", new Object[]{"Nr Matricol", "Prenume", "Nume", "Formatie"});
+        int i = 2;
+        for (Student s : listaStudenti) {
+            data.put(String.valueOf(i), new Object[]{
+                    s.getNumarMatricol(),
+                    s.getPrenume(),
+                    s.getNumarMatricol(),
+                    s.getFormatieDeStudiu()
+            });
+            i++;
+        }
+        int rand = 0;
+
+        for (String key : data.keySet()) {
+            Row row = sheet.createRow(rand++);
+            Object[] objArr = data.get(key);
+            int cellNum = 0;
+            for (Object obj : objArr) {
+                Cell cell = row.createCell(cellNum++);
+                if (obj instanceof String)
+                    cell.setCellValue((String) obj);
+                else if (obj instanceof Integer)
+                    cell.setCellValue((Integer) obj);
+            }
+        }
+
+        try (FileOutputStream out = new FileOutputStream("StudentData.xlsx")) {
+            workbook.write(out);
+            System.out.println("StudentData.xlsx written successfully.");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
