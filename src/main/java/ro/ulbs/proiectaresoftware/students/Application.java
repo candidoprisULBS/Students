@@ -49,7 +49,7 @@ public class Application {
         }
 
         Set<Student> setStudenti = new HashSet<>(listaStudenti);
-        Student studentCautat = new Student("182", "Ioan", "Popa", "TI21/1");
+        Student studentCautat = new Student("112", "Ioan", "Popa", "TI21/1");
 
         System.out.println();
         if (prezenta(setStudenti, studentCautat)) {
@@ -65,14 +65,17 @@ public class Application {
             System.out.println("Nu exista nota pentru acest student! " + studentCautat.getNume() + " este " + studentCautat.getNumarMatricol());
         }
 
-        Map<Student,Integer> mapNoteStudenti = noteStudentiFaraMatricol(listaStudenti, citireNote);
-        Student s = new Student(null,"Alex","Doro","C22/2");
+        Map<Student, Integer> mapNoteStudenti = noteStudentiFaraMatricol(listaStudenti, citireNote);
+        Student s = new Student(null, "Alex", "Doro", "C22/2");
         listaStudenti.add(s);
 
         printNota(mapNoteStudenti, s);
 
-        //printareEXCEL(listaStudenti,"Printare EXCEL");
-        
+        //printareEXCEL(listaStudenti, "Printare EXCEL");
+
+        exportList(listaStudenti,getExporterToFile("DataStudent.xlsx"));
+        exportList(listaStudenti,getExporterToFile("DataStudent.csv"));
+        exportList(listaStudenti,getExporterToFile("DataStudent.txt"));
 
     }
 
@@ -176,26 +179,26 @@ public class Application {
         return mapCreat;
     }
 
-    public static Map<Student, Integer> noteStudentiFaraMatricol(List<Student> list,Map<String,Integer> n){
-        Map<Student,Integer> notaFinal = new HashMap<>();
-        for(Student s:list){
+    public static Map<Student, Integer> noteStudentiFaraMatricol(List<Student> list, Map<String, Integer> n) {
+        Map<Student, Integer> notaFinal = new HashMap<>();
+        for (Student s : list) {
             Integer nota = n.get(s.getNumarMatricol());
-            if (nota != null){
-                notaFinal.put(s,nota);
+            if (nota != null) {
+                notaFinal.put(s, nota);
             }
         }
         return notaFinal;
     }
 
-    private static void printNota(Map<Student, Integer> afisareNotaStudentiFaraMatricol,Student studentFaraMatricol) {
-        if(afisareNotaStudentiFaraMatricol.containsKey(studentFaraMatricol)){
-            System.out.println("Nota lui "+ studentFaraMatricol.getNume() + " este "+ afisareNotaStudentiFaraMatricol.get(studentFaraMatricol));
-        }else{
+    private static void printNota(Map<Student, Integer> afisareNotaStudentiFaraMatricol, Student studentFaraMatricol) {
+        if (afisareNotaStudentiFaraMatricol.containsKey(studentFaraMatricol)) {
+            System.out.println("Nota lui " + studentFaraMatricol.getNume() + " este " + afisareNotaStudentiFaraMatricol.get(studentFaraMatricol));
+        } else {
             System.out.println("Studentul nu exista!");
         }
     }
 
-    public static void printareEXCEL(List<Student> listaStudenti,String numeEXCEL){
+    public static void printareEXCEL(List<Student> listaStudenti, String numeEXCEL) {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("Studenti");
         Map<String, Object[]> data = new TreeMap<>();
@@ -227,9 +230,44 @@ public class Application {
 
         try (FileOutputStream out = new FileOutputStream("StudentData.xlsx")) {
             workbook.write(out);
-            System.out.println("StudentData.xlsx written successfully.");
+            System.out.println("StudentData.xlsx scris cu succes!");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    private static void exportList(List<Student> list, Exporter exporter) {
+        exporter.export_studenti(list);
+    }
+
+    private static Exporter getExporterToFile(String filename) {
+        String fileExtension = filename.substring(filename.lastIndexOf('.'));
+        return switch (fileExtension) {
+            case ".xlsx" -> new ExportToExcel(filename);
+            case ".csv" -> new ExportToCSV(filename);
+            case ".txt" -> new ExportToText(filename);
+            default -> throw new IllegalArgumentException("Extensie nesuportata " + fileExtension);
+        };
+    }
+
+    private static void importList(List<Student> list, Importer importer) {
+        importer.import_studenti(list);
+    }
+
+    private static void importNote(Map<String, Integer> map, Importer importer) {
+        importer.import_note(map);
+    }
+
+//    private static Importer getImporterFromFile(String... filename) {
+//        if (filename.length == 1) {
+//            String fileExtension = filename[0].substring(filename[0].lastIndexOf('.'));
+//            if (fileExtension.equals(".xlsx")) {
+//                return new ImportFromExcel(filename[0]);
+//            }
+//        } else if (filename.length == 2) {
+//            String fileExtensionStudenti = filename[0].substring(filename[0].lastIndexOf('.'));
+//            String fileExtensionNote = filename[1].substring(filename[1].lastIndexOf('.'));
+//            return switch(fileExtensionStudenti,fileExtensionNote)
+//        }
+//    }
 }

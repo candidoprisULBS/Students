@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class ExportToExcel implements Exporter{
-    String filename;
+    final private String filename;
 
     public ExportToExcel(String filename) {
         this.filename = filename;
@@ -29,7 +29,7 @@ public class ExportToExcel implements Exporter{
             data.put(String.valueOf(i), new Object[]{
                     s.getNumarMatricol(),
                     s.getPrenume(),
-                    s.getNumarMatricol(),
+                    s.getNume(),
                     s.getFormatieDeStudiu()
             });
             i++;
