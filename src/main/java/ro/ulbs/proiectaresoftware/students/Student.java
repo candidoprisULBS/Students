@@ -1,38 +1,14 @@
 package ro.ulbs.proiectaresoftware.students;
 
 import java.util.Objects;
-public class Student implements Comparable<Student>{
-    final String numarMatricol;
-    final String prenume;
-    final String nume;
-    final String formatieDeStudiu;
 
-    public Student(String numarMatricol, String prenume, String nume, String formatieDeStudiu) {
-        this.numarMatricol = numarMatricol;
-        this.prenume = prenume;
-        this.nume = nume;
-        this.formatieDeStudiu = formatieDeStudiu;
-    }
+public record Student(
+        String numarMatricol,
+        String prenume,
+        String nume,
+        String formatieDeStudiu)
 
-
-    public String getNumarMatricol() {
-        return numarMatricol;
-    }
-
-    public String getFormatieDeStudiu() {
-        return formatieDeStudiu;
-    }
-
-    public String getNume() {
-        return nume;
-    }
-
-    public String getPrenume() {
-        return prenume;
-    }
-
-
-
+        implements Comparable<Student> {
 
     @Override
     public String toString() {
@@ -53,12 +29,14 @@ public class Student implements Comparable<Student>{
 
     @Override
     public int compareTo(Student s) {
-        if(this.formatieDeStudiu.equals(s.formatieDeStudiu)){
-            if(this.nume.equals(s.nume)) {
+        if (this.formatieDeStudiu.equals(s.formatieDeStudiu)) {
+            if (this.nume.equals(s.nume)) {
                 return this.prenume.compareTo(s.prenume);
             }
             return this.nume.compareTo(s.nume);
         }
         return this.formatieDeStudiu.compareTo(s.formatieDeStudiu);
     }
-;}
+
+    ;
+}

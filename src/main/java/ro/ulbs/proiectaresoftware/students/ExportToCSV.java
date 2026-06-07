@@ -16,10 +16,10 @@ public class ExportToCSV implements Exporter {
             FileWriter fw = new FileWriter(filename);
             for(int i=0;i<studenti.size();i++){
                 fw.write(String.format("%s, %s, %s, %s\n",
-                        stergereTextNull(studenti.get(i).getNumarMatricol()),
-                        stergereTextNull(studenti.get(i).getPrenume()),
-                        stergereTextNull(studenti.get(i).getNume()),
-                        stergereTextNull(studenti.get(i).getFormatieDeStudiu())));
+                        stergereTextNull(studenti.get(i).numarMatricol()),
+                        stergereTextNull(studenti.get(i).prenume()),
+                        stergereTextNull(studenti.get(i).nume()),
+                        stergereTextNull(studenti.get(i).formatieDeStudiu())));
             }
             fw.close();
             System.out.println("Fisierul CSV a fost creat: "+filename);

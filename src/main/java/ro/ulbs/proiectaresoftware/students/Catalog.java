@@ -5,32 +5,25 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 public class Catalog {
-    private static final Catalog instance = new Catalog();
+    private static Catalog instance = null;
     private Catalog() {
     }
 
     public static Catalog getInstance() {
+        if(instance == null) {
+            instance = new Catalog();
+        }
         return instance;
     }
 
-    private static Exporter getExporterToFile(String filename) {
-        String fileExtension = filename.substring(filename.lastIndexOf('.'));
-        return switch (fileExtension) {
-            case ".xlsx" -> new ExportToExcel(filename);
-            case ".csv" -> new ExportToCSV(filename);
-            case ".txt" -> new ExportToText(filename);
-            default -> throw new IllegalArgumentException("Extensie nesuportata " + fileExtension);
-        };
-    }
-
-    private static void exportList(List<Student> list, Exporter exporter) {
+    public static void exportList(List<Student> list, Exporter exporter) {
         exporter.export_studenti(list);
     }
 
     public static Map<Student, Integer> noteStudentiFaraMatricol(List<Student> list, Map<String, Integer> n) {
         Map<Student, Integer> notaFinal = new HashMap<>();
         for (Student s : list) {
-            Integer nota = n.get(s.getNumarMatricol());
+            Integer nota = n.get(s.numarMatricol());
             if (nota != null) {
                 notaFinal.put(s, nota);
             }
@@ -43,7 +36,7 @@ public class Catalog {
     }
 
     public static Integer nota(Map<String, Integer> note, Student student) {
-        return note.get(student.getNumarMatricol());
+        return note.get(student.numarMatricol());
     }
 
     public static Map<String, Integer> citireNote(String csv) {
@@ -72,10 +65,10 @@ public class Catalog {
         Collections.sort(list, new Comparator<Student>() {
             @Override
             public int compare(Student o1, Student o2) {
-                if (o1.formatieDeStudiu.equals(o2.formatieDeStudiu)) {
-                    return o1.nume.compareTo(o2.nume);
+                if (o1.formatieDeStudiu().equals(o2.formatieDeStudiu())) {
+                    return o1.nume().compareTo(o2.nume());
                 }
-                return o1.formatieDeStudiu.compareTo(o2.formatieDeStudiu);
+                return o1.formatieDeStudiu().compareTo(o2.formatieDeStudiu());
             }
 
             @Override

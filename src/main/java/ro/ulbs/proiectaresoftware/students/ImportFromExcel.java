@@ -1,6 +1,7 @@
 package ro.ulbs.proiectaresoftware.students;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -23,26 +24,31 @@ public class ImportFromExcel implements Importer {
     @Override
     public void import_studenti(List<Student> studenti) {
         try (FileInputStream file = new FileInputStream(filename);
-             XSSFWorkbook workbook = new XSSFWorkbook(file)) {
+            XSSFWorkbook workbook = new XSSFWorkbook(file)) {
             XSSFSheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rowIterator = sheet.iterator();
             while (rowIterator.hasNext()) {
                 Row row = rowIterator.next();
-                Iterator<Cell> cellIterator = row.cellIterator();
-                while (cellIterator.hasNext()) {
-                    Cell cell = cellIterator.next();
-                    switch (cell.getCellType()) {
-                        case STRING:
-                            System.out.print(cell.getStringCellValue() + "\t");
-                            break;
-                        case NUMERIC:
-                            System.out.print(cell.getNumericCellValue() + "\t");
-                            break;
-                        default:
-                            break;
-                    }
+                if (row.getCell(0) == null || row.getCell(0).getCellType() == CellType.BLANK) {
+                    continue;
                 }
-                System.out.println();
+                Cell cell0 = row.getCell(0);
+                Cell cell1 = row.getCell(1);
+                Cell cell2 = row.getCell(2);
+                Cell cell3 = row.getCell(3);
+
+                if (cell0 != null || cell1 != null || cell2 != null || cell3 != null) {
+                    String nrMatricol= (cell0.getCellType() == CellType.NUMERIC) ? String.valueOf((int) cell0.getNumericCellValue()) : cell0.getStringCellValue();
+                    String nume = (cell1.getCellType() == CellType.NUMERIC) ? String.valueOf((int) cell1.getNumericCellValue()) : cell1.getStringCellValue();
+                    String prenume = (cell2.getCellType() == CellType.NUMERIC) ? String.valueOf((int) cell2.getNumericCellValue()) : cell2.getStringCellValue();
+                    String specializare = (cell3.getCellType() == CellType.NUMERIC) ? String.valueOf((int) cell3.getNumericCellValue()) : cell3.getStringCellValue();
+                    Student s = new Student(
+                            nrMatricol,
+                            nume,
+                            prenume,
+                            specializare);
+                    studenti.add(s);
+                }
             }
 
         } catch (IOException e) {
@@ -60,24 +66,22 @@ public class ImportFromExcel implements Importer {
             while (rowIterator.hasNext()) {
                 Row row = rowIterator.next();
                 Iterator<Cell> cellIterator = row.cellIterator();
-                while (cellIterator.hasNext()) {
-                    Cell cell = cellIterator.next();
-                    switch (cell.getCellType()) {
-                        case STRING:
-                            System.out.print(cell.getStringCellValue() + "\t");
-                            break;
-                        case NUMERIC:
-                            System.out.print(cell.getNumericCellValue() + "\t");
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                System.out.println();
+                Cell cell = cellIterator.next();
+                String nrMatricol = cell.getStringCellValue();
+                cellIterator.next();
+                String notaStudent = cell.getStringCellValue();
+                note.put(nrMatricol, Integer.parseInt(notaStudent));
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<Student> getStudenti() {
+        return studenti;
+    }
+
+    public Map<String, Integer> getNote() {
+        return note;
     }
 }

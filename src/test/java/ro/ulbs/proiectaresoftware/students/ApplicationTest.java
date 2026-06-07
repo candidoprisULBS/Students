@@ -26,10 +26,11 @@ class ApplicationTest {
         Student prezent = s2;
         Student absent = s3;
         Student duplicat = s4;
+        Catalog catalog=Catalog.getInstance();
         //Assert
-        assertTrue(Application.prezenta(listaStudenti, prezent));
-        assertFalse(Application.prezenta(listaStudenti, absent));
-        assertTrue(Application.prezenta(listaStudenti, duplicat));
+        assertTrue(catalog.prezenta(listaStudenti, prezent));
+        assertFalse(catalog.prezenta(listaStudenti, absent));
+        assertTrue(catalog.prezenta(listaStudenti, duplicat));
     }
 
     @Test
@@ -43,9 +44,10 @@ class ApplicationTest {
         noteMap.put("120", 7);
         noteMap.put("152", null);
         //Act
-        Integer notaCorecta = Application.nota(noteMap,s1);
-        Integer notaGresita = Application.nota(noteMap,s3);
-        Integer notaInexsistenta = Application.nota(noteMap,s2);
+        Catalog catalog = Catalog.getInstance();
+        Integer notaCorecta = catalog.nota(noteMap,s1);
+        Integer notaGresita = catalog.nota(noteMap,s3);
+        Integer notaInexsistenta = catalog.nota(noteMap,s2);
         //Assert
         assertEquals(10,notaCorecta);
         assertNotEquals(8,notaGresita);
@@ -66,8 +68,10 @@ class ApplicationTest {
         Student s6 = new Student("112", "Maria", "Oprea", "ISM");
         Student s7 = new Student("120", "Alis", "Popa", "TI21/1");
         Student s8 = new Student("112", "Ioan", "Popa", "ISM");
+
+        Catalog catalog = Catalog.getInstance();
         //Act - formatiuni unice
-        Application.sortareDupaNumeSiFormatiune(listaStudenti1);
+        catalog.sortareDupaNumeSiFormatiune(listaStudenti1);
         //Assert - formatiuni unice
         for(int i = 0; i < listaStudenti1.size() - 1; i++) {
             Student curent = listaStudenti1.get(i);
@@ -77,7 +81,7 @@ class ApplicationTest {
             assertEquals(rezultatComparare <=0,"Ordine gresita");
         }
         //Act - formatiuni diferite
-        Application.sortareDupaNumeSiFormatiune(listaStudenti2);
+        catalog.sortareDupaNumeSiFormatiune(listaStudenti2);
         //Assert - formatiuni diferite
         for(int i = 0; i < listaStudenti2.size() - 1; i++) {
             Student curent = listaStudenti2.get(i);

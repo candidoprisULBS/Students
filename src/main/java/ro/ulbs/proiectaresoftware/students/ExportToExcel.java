@@ -27,10 +27,10 @@ public class ExportToExcel implements Exporter{
         int i = 2;
         for (Student s : studenti) {
             data.put(String.valueOf(i), new Object[]{
-                    s.getNumarMatricol(),
-                    s.getPrenume(),
-                    s.getNume(),
-                    s.getFormatieDeStudiu()
+                    s.numarMatricol(),
+                    s.prenume(),
+                    s.nume(),
+                    s.formatieDeStudiu()
             });
             i++;
         }
